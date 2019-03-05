@@ -13,6 +13,13 @@
             $this->router->get('/',function(){
                 echo 'home';
             });
+            $this->router->get('/Admin/login/{id}',function($param){
+                require_once (dirname(__DIR__).'/controller/AdminController.php');
+                $AdminController = new AdminController($param);
+                $AdminController->login();
+            });
+
+
 
             $this->router->get('/bac-si/{id}/{list}',function($param){
                 echo 'page bác sĩ có các tham số :';
