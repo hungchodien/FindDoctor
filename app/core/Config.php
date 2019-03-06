@@ -5,10 +5,11 @@ $GLOBALS['Config'] = [
         'dbname' => 'test',
         'username' => 'root',
         'password' => '',
-        'port' => 2020
+        'port' => 3306
     ],
     'SERVER' => [
         'locate' => 'vi',
         'time' => 'UTC'
-    ]
+    ],
+    'home_page' => 'http://test_doctor.com'
 ];

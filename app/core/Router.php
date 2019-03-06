@@ -11,7 +11,6 @@
 		}
 
 		private function getRequestURL(){
-
 			$url = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/';
 			$url = $url === '' || empty($url) ? '/' : $url;
 			return $url;
@@ -22,20 +21,20 @@
 			return $method;
 		}
 
-		private function addRouter($method,$url,$action){
-			$this->routers[] = [$method,$url,$action];
+		private function addRouter($method,$url,$action , $name = null){
+			$this->routers[] = [$method,$url,$action , $name];
 		}
 
-		public function get($url,$action){
-            $this->addRouter('GET',$url,$action);
+		public function get($url,$action , $name = null){
+            $this->addRouter('GET',$url,$action , $name);
 		}
 
-		public function post($url,$action){
-            $this->addRouter('POST',$url,$action);
+		public function post($url,$action , $name = null){
+            $this->addRouter('POST',$url,$action , $name);
 		}
 
-		public function any($url,$action){
-			$this->addRouter('GET|POST',$url,$action);
+		public function any($url,$action , $name = null){
+			$this->addRouter('GET|POST',$url,$action , $name);
 		}
 
 		public function map(){
@@ -111,8 +110,10 @@
                             /// mapping các param vào
                             foreach( $routeParams as $k => $rp ){
                                 if(strpos($rp, '{') === FALSE ){
-                                    if($routeParams[$k] !== $requestParams[$k])
-                                        $before = !$before;
+                                    if($routeParams[$k] !== $requestParams[$k]){
+                                        $before = true;
+                                        break;
+                                    }
                                 }
                                 if( preg_match('/^{\w+}$/',$rp) ){
                                     $params[str_replace(['{' , '}'], '', $routeParams[$k] )] = $requestParams[$k];

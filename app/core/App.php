@@ -13,19 +13,31 @@
             $this->router->get('/',function(){
                 echo 'home';
             });
-            $this->router->get('/Admin/login/{id}',function($param){
+
+            $this->router->get('/Admin/login',function($param){
+                echo 'admin';
                 require_once (dirname(__DIR__).'/controller/AdminController.php');
                 $AdminController = new AdminController($param);
                 $AdminController->login();
             });
-
-
+            $this->router->post('/Admin/post_login',function($param){
+                require_once (dirname(__DIR__).'/controller/AdminController.php');
+                $AdminController = new AdminController($param);
+                $AdminController->post_login();
+            });
+            $this->router->get('/Admin/login_suceess',function($param){
+                echo 'login ok';
+            });
 
             $this->router->get('/bac-si/{id}/{list}',function($param){
-                echo 'page bác sĩ có các tham số :';
-                echo '<pre>';
-                var_dump($param);
+                echo 'bac-si';
+                require_once (dirname(__DIR__).'/controller/bacsiController.php');
+                $AdminController = new bacsiController($param);
+                $AdminController->bacsi();
             });
+
+
+
             $this->router->get('/admin/{id}',function($param){
                 echo 'page admin với tham số : ';
                 echo '<pre>';
