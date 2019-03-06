@@ -9,11 +9,17 @@
 
 		function __construct()
 		{
+            ob_start();
+            session_start();
 			$this->router = new Router();
             $this->router->get('/',function(){
                 echo 'home';
             });
-
+            $this->router->any('/logout',function($param){
+                require_once (dirname(__DIR__).'/controller/AdminController.php');
+                $AdminController = new AdminController($param);
+                $AdminController->logout();
+            });
             $this->router->get('/Admin/login',function($param){
                 echo 'admin';
                 require_once (dirname(__DIR__).'/controller/AdminController.php');
@@ -26,7 +32,11 @@
                 $AdminController->post_login();
             });
             $this->router->get('/Admin/login_suceess',function($param){
-                echo 'login ok';
+                $auth = new Auth();
+                echo '<pre>';
+                var_dump($auth->user());
+                echo 'login thành công';
+                echo '<a href="/logout">logout</a>';
             });
 
             $this->router->get('/bac-si/{id}/{list}',function($param){
@@ -35,9 +45,6 @@
                 $AdminController = new bacsiController($param);
                 $AdminController->bacsi();
             });
-
-
-
             $this->router->get('/admin/{id}',function($param){
                 echo 'page admin với tham số : ';
                 echo '<pre>';

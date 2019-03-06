@@ -12,18 +12,44 @@ class AdminController extends Controller
     /**
      * viết 1 function get dành cho login admin
      */
+    public function logout(){
+        $auth = new Auth();
+        $auth->logout();
+        $this->redirect($GLOBALS['Config']['home_page'].'/Admin/login');
+    }
     public function login(){
-        $sql = new SqlQueryBuilder();
-        $query = $sql->select(['*'])->from(' doctor ')->where('1 == 1 ')->build();
-        $db = new Database();
-        $kq = $db->query_sql('SELECT * FROM doctor');
-        parent::render('login' , ['hung' => 'chắc chắn đẹp trai' , 'sql' => $query , 'kq' => $kq]);
+        $auth = new Auth();
+        if($auth->check_login() == false){
+            ///user chưa login
+            $sql = new SqlQueryBuilder();
+            $query = $sql->select(['*'])->from(' doctor ')->where('1 == 1 ')->build();
+            $db = new Database();
+            $kq = $db->query_sql('SELECT * FROM doctor');
+            parent::render('login' , ['hung' => 'chắc chắn đẹp trai' , 'sql' => $query , 'kq' => $kq]);
+        }else{
+            //login thành công
+            $this->redirect($GLOBALS['Config']['home_page'] . '/Admin/login_suceess');
+        }
     }
     public function post_login(){
-        if($_REQUEST['username'] == 'hung' && $_REQUEST['pasword'] == 'hung')
-            $this->redirect($GLOBALS['Config']['home_page'].'/Admin/login_suceess');
-        else{
-            $this->redirect($GLOBALS['Config']['home_page'].'/Admin/login');
+        $username = $_REQUEST['username'];
+        $password = $_REQUEST['pasword'];
+
+        $db = new Database();
+        if($db->check_connect['status']){
+            $auth = new Auth();
+            if(!$auth->check_login()){
+                ///chưa login thì login
+                if($auth->login($username , $password)){
+                    //login thành công
+                    $this->redirect($GLOBALS['Config']['home_page'] . '/Admin/login_suceess');
+                }else{
+                    /// login thất bại
+                    $this->redirect($GLOBALS['Config']['home_page'].'/Admin/login');
+                }
+            }
+        }else{
+            die('error system connect db');
         }
     }
 }
