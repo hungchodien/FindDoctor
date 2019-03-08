@@ -41,9 +41,15 @@ class AdminController extends Controller
             if(!$auth->check_login()){
                 ///chưa login thì login
                 if($auth->login($username , $password)){
+                    $sessio = new Session();
+                    echo '<pre>';
+                    $sessio->setSessionNew(['login_thanhcong'=> 1]);
                     //login thành công
                     $this->redirect($GLOBALS['Config']['home_page'] . '/Admin/login_suceess');
+
                 }else{
+                    $sessio = new Session();
+                    $sessio->setSessionNew(['login_thatbai'=> 1]);
                     /// login thất bại
                     $this->redirect($GLOBALS['Config']['home_page'].'/Admin/login');
                 }
